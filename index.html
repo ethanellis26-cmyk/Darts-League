@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDLv3 — 2026-S1</title>
+<style>
+:root {
+  --bg:           #0d1117;
+  --surface:      #161b22;
+  --border:       #30363d;
+  --text:         #e6edf3;
+  --muted:        #8b949e;
+  --accent:       #1f4e79;
+  --accent-light: #2d6da8;
+  --green:        #3fb950;
+  --red:          #f85149;
+  --gold:         #d29922;
+  --me-bg:        #1a3a5c;
+  --me-border:    #2d6da8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+header {
+  background: var(--accent);
+  padding: 16px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 2px solid var(--accent-light);
+}
+header h1 { font-size: 20px; font-weight: 700; }
+header .season { color: #a8c4e0; font-size: 13px; }
+main { max-width: 980px; margin: 0 auto; padding: 28px 16px; }
+section { margin-bottom: 44px; }
+h2 {
+  font-size: 16px; font-weight: 600;
+  margin-bottom: 16px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+h2 .subtitle { font-weight: 400; color: var(--muted); font-size: 13px; }
+h3 {
+  font-size: 12px; font-weight: 600;
+  margin: 20px 0 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Tabs ---- */
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.12s, color 0.12s;
+}
+.tab-btn:hover { background: var(--border); color: var(--text); }
+.tab-btn.active { background: var(--accent); border-color: var(--accent-light); color: #fff; }
+.league-panel { display: none; }
+.league-panel.active { display: block; }
+
+/* ---- Tables ---- */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+thead tr { background: var(--accent); }
+thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c9d8ea;
+  white-space: nowrap;
+}
+tbody tr { border-top: 1px solid var(--border); transition: background 0.08s; }
+tbody tr:hover { background: rgba(255,255,255,0.035); }
+td { padding: 9px 12px; white-space: nowrap; }
+td.name { font-weight: 500; white-space: normal; min-width: 120px; }
+td.pts  { font-weight: 700; color: var(--gold); }
+td.diff { color: var(--muted); }
+
+/* ---- Ethan's row ---- */
+tr.me { background: var(--me-bg); border-left: 3px solid var(--me-border); }
+tr.me:hover { background: #1e3f63; }
+tr.me td.pts { color: #5ba8e5; }
+.badge {
+  display: inline-block;
+  background: var(--accent-light);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  vertical-align: middle;
+  letter-spacing: 0.05em;
+  margin-left: 4px;
+}
+
+/* ---- Summary cards ---- */
+.summary-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  min-width: 90px;
+  text-align: center;
+}
+.card-val   { font-size: 22px; font-weight: 700; }
+.card-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---- Match result colours ---- */
+td.result { font-weight: 700; text-align: center; }
+td.result.win  { color: var(--green); }
+td.result.loss { color: var(--red); }
+
+.empty { color: var(--muted); font-style: italic; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 24px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 600px) {
+  table { font-size: 12px; }
+  td, th { padding: 7px 8px; }
+  .summary-cards { gap: 8px; }
+  .card { min-width: 75px; padding: 10px 12px; }
+  .card-val { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>PDL Darts League</h1>
+  <span class="season">2026-S1</span>
+</header>
+<main>
+<section id="standings">
+  <h2>League Standings</h2>
+  <div class="tabs">
+<button class="tab-btn" id="tab-A" onclick="showLeague('A')">League A</button>
+<button class="tab-btn" id="tab-B" onclick="showLeague('B')">League B</button>
+<button class="tab-btn" id="tab-C" onclick="showLeague('C')">League C</button>
+<button class="tab-btn" id="tab-D" onclick="showLeague('D')">League D</button>
+<button class="tab-btn" id="tab-E" onclick="showLeague('E')">League E</button>
+</div>
+
+  <div id="league-A" class="league-panel">
+<table>
+<thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>SW</th><th>SL</th><th>SD</th><th>LW</th><th>LL</th><th>LD</th><th>Pts</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="name">Steven Kirk</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>0</td><td class="diff">6</td><td class="pts">2</td></tr>
+<tr><td>2</td><td class="name">Nick Payne</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>3</td><td class="name">Tom Blackwell</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>4</td><td class="name">Kevin Ryland</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>5</td><td class="name">Oliver Frost</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>6</td><td class="name">Peter Ashwood</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>7</td><td class="name">Richard Daly</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>8</td><td class="name">Hugh Manning</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>3</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>9</td><td class="name">Quentin Shore</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>7</td><td>5</td><td class="diff">2</td><td class="pts">2</td></tr>
+<tr><td>10</td><td class="name">Lance Cooper</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>6</td><td>6</td><td class="diff">0</td><td class="pts">2</td></tr>
+<tr><td>11</td><td class="name">Ivan Knight</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>6</td><td>6</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>12</td><td class="name">Dick Wright</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>7</td><td class="diff">-2</td><td class="pts">0</td></tr>
+<tr><td>13</td><td class="name">Marcus Webb</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>3</td><td>8</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>14</td><td class="name">Charles Ingram</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>15</td><td class="name">Eugene Saunders</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>16</td><td class="name">Fred Barker</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>17</td><td class="name">Jon Perry</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>18</td><td class="name">Alan Sherwood</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>19</td><td class="name">Gordon Croft</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>20</td><td class="name">Bob Daley</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>0</td><td>6</td><td class="diff">-6</td><td class="pts">0</td></tr>
+</tbody></table>
+</div>
+<div id="league-B" class="league-panel">
+<table>
+<thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>SW</th><th>SL</th><th>SD</th><th>LW</th><th>LL</th><th>LD</th><th>Pts</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="name">Leo Partridge</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>2</td><td class="name">Philip Garner</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>3</td><td class="name">Randy Fleming</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>2</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>4</td><td class="name">Derek Sampson</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>5</td><td class="name">Ken Abbott</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>6</td><td class="name">Norman Blaine</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>7</td><td class="name">Terry McGee</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>4</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>8</td><td class="name">Harry Weston</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>5</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>9</td><td class="name">Sam Hartley</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>5</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>10</td><td class="name">Frank Muir</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>6</td><td>6</td><td class="diff">0</td><td class="pts">2</td></tr>
+<tr><td>11</td><td class="name">Oscar Wallis</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>6</td><td>6</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>12</td><td class="name">Brian Tate</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>8</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>13</td><td class="name">Mick Sherwood</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>8</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>14</td><td class="name">Adrian Morley</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>4</td><td>8</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>15</td><td class="name">Gerald Steele</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>16</td><td class="name">Jack Dunmore</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>17</td><td class="name">Quinton Nash</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>18</td><td class="name">Colin Frost</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>19</td><td class="name">Eric Lawson</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>2</td><td>6</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>20</td><td class="name">Ivan Cole</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+</tbody></table>
+</div>
+<div id="league-C" class="league-panel">
+<table>
+<thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>SW</th><th>SL</th><th>SD</th><th>LW</th><th>LL</th><th>LD</th><th>Pts</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="name">Carl Briggs</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>2</td><td class="name">Tony Walsh</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>3</td><td class="name">Noel Brannigan</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>4</td><td class="name">Graham Holt</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>5</td><td class="name">Al Jennings</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>6</td><td class="name">Dave Sutherland</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>4</td><td class="diff">2</td><td class="pts">2</td></tr>
+<tr><td>7</td><td class="name">Ian Clifford</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>5</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>8</td><td class="name">Simon Kelley</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>5</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>9</td><td class="name">Vic Hartigan</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>7</td><td class="diff">1</td><td class="pts">2</td></tr>
+<tr><td>10</td><td class="name">Keith Kirwan</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>7</td><td>7</td><td class="diff">0</td><td class="pts">2</td></tr>
+<tr><td>11</td><td class="name">Mike Stavros</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>7</td><td>7</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>12</td><td class="name">Steve Langford</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>7</td><td>8</td><td class="diff">-1</td><td class="pts">0</td></tr>
+<tr><td>13</td><td class="name">Barry Leach</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>8</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>14</td><td class="name">Des Connolly</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>8</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>15</td><td class="name">Pat Osman</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>4</td><td>6</td><td class="diff">-2</td><td class="pts">0</td></tr>
+<tr><td>16</td><td class="name">Peter Nolan</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>17</td><td class="name">Darren Pryor</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>18</td><td class="name">John Hargreaves</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>19</td><td class="name">Wayne Fenton</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>20</td><td class="name">Stuart Millward</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+</tbody></table>
+</div>
+<div id="league-D" class="league-panel">
+<table>
+<thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>SW</th><th>SL</th><th>SD</th><th>LW</th><th>LL</th><th>LD</th><th>Pts</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="name">James Callahan</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>0</td><td class="diff">6</td><td class="pts">2</td></tr>
+<tr><td>2</td><td class="name">Tom Whitfield</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>3</td><td class="name">Nathan Vickers</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>4</td><td class="name">Dean Blackwood</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>5</td><td class="name">Ryan Holloway</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>6</td><td class="name">Mark Fenwick</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>7</td><td class="name">Scott Brennan</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>4</td><td class="diff">4</td><td class="pts">2</td></tr>
+<tr><td>8</td><td class="name">Phil Crowe</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>7</td><td class="diff">1</td><td class="pts">2</td></tr>
+<tr><td>9</td><td class="name">Luke Ashton</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>7</td><td>6</td><td class="diff">1</td><td class="pts">2</td></tr>
+<tr><td>10</td><td class="name">Kevin Patel</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>7</td><td>7</td><td class="diff">0</td><td class="pts">2</td></tr>
+<tr><td>11</td><td class="name">Paul Slater</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>7</td><td>7</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>12</td><td class="name">Gary Tanner</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>6</td><td>7</td><td class="diff">-1</td><td class="pts">0</td></tr>
+<tr><td>13</td><td class="name">Craig Holden</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>7</td><td>8</td><td class="diff">-1</td><td class="pts">0</td></tr>
+<tr><td>14</td><td class="name">Chris Dumont</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>4</td><td>8</td><td class="diff">-4</td><td class="pts">0</td></tr>
+<tr><td>15</td><td class="name">Neil Forsyth</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>16</td><td class="name">Ben Farrow</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>17</td><td class="name">Andy Marsh</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>18</td><td class="name">Danny Cross</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>19</td><td class="name">Rob McAllister</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>20</td><td class="name">Lee Sutton</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>0</td><td>6</td><td class="diff">-6</td><td class="pts">0</td></tr>
+</tbody></table>
+</div>
+<div id="league-E" class="league-panel">
+<table>
+<thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>SW</th><th>SL</th><th>SD</th><th>LW</th><th>LL</th><th>LD</th><th>Pts</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="name">Xavier Cherniak</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>0</td><td class="diff">6</td><td class="pts">2</td></tr>
+<tr><td>2</td><td class="name">Brenden Bready</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>0</td><td class="diff">6</td><td class="pts">2</td></tr>
+<tr><td>3</td><td class="name">Edward Towers</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>1</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>4</td><td class="name">Seth Kricheff</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>3</td><td class="diff">3</td><td class="pts">2</td></tr>
+<tr><td>5</td><td class="name">Aaron Maymin</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>4</td><td class="diff">2</td><td class="pts">2</td></tr>
+<tr><td>6</td><td class="name">Eduardo Puerta</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td class="diff">2</td><td>6</td><td>4</td><td class="diff">2</td><td class="pts">2</td></tr>
+<tr><td>7</td><td class="name">Jake Thomas</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>3</td><td class="diff">5</td><td class="pts">2</td></tr>
+<tr><td>8</td><td class="name">Sebastian Warburton</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>7</td><td>5</td><td class="diff">2</td><td class="pts">2</td></tr>
+<tr><td>9</td><td class="name">Liam Neary</td><td>1</td><td>1</td><td>0</td><td>2</td><td>1</td><td class="diff">1</td><td>8</td><td>7</td><td class="diff">1</td><td class="pts">2</td></tr>
+<tr class="me"><td>10</td><td class="name">Ethan Ellis <span class="badge">YOU</span></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="diff">0</td><td>0</td><td>0</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>11</td><td class="name">Cross Patriaco</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="diff">0</td><td>0</td><td>0</td><td class="diff">0</td><td class="pts">0</td></tr>
+<tr><td>12</td><td class="name">Ally Powers</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>7</td><td>8</td><td class="diff">-1</td><td class="pts">0</td></tr>
+<tr><td>13</td><td class="name">Hans Nsengimana</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>5</td><td>7</td><td class="diff">-2</td><td class="pts">0</td></tr>
+<tr><td>14</td><td class="name">Mathew Cuschieri</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td class="diff">-1</td><td>3</td><td>8</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>15</td><td class="name">Martin Trouiloud</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>4</td><td>6</td><td class="diff">-2</td><td class="pts">0</td></tr>
+<tr><td>16</td><td class="name">Alexander Ketterson</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>4</td><td>6</td><td class="diff">-2</td><td class="pts">0</td></tr>
+<tr><td>17</td><td class="name">Max White</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>3</td><td>6</td><td class="diff">-3</td><td class="pts">0</td></tr>
+<tr><td>18</td><td class="name">Freddy Kwak</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>1</td><td>6</td><td class="diff">-5</td><td class="pts">0</td></tr>
+<tr><td>19</td><td class="name">Alex Gehl</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>0</td><td>6</td><td class="diff">-6</td><td class="pts">0</td></tr>
+<tr><td>20</td><td class="name">Phillip Han</td><td>1</td><td>0</td><td>1</td><td>0</td><td>2</td><td class="diff">-2</td><td>0</td><td>6</td><td class="diff">-6</td><td class="pts">0</td></tr>
+</tbody></table>
+</div>
+
+</section>
+<section id="my-stats">
+<h2>My Season Stats <span class="subtitle">— Ethan Ellis · League E</span></h2>
+<p class="empty">No matches played yet.</p>
+</section>
+
+</main>
+<footer>Last updated: 03 Mar 2026 16:47</footer>
+<script>
+function showLeague(l) {
+  document.querySelectorAll('.league-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  var panel = document.getElementById('league-' + l);
+  var btn   = document.getElementById('tab-' + l);
+  if (panel) panel.classList.add('active');
+  if (btn)   btn.classList.add('active');
+}
+window.onload = function() { showLeague('E'); };
+</script>
+</body>
+</html>
