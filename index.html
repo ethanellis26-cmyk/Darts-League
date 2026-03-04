@@ -170,6 +170,9 @@ td.result.win  { color: var(--green); }
 td.result.loss { color: var(--red); }
 
 .empty { color: var(--muted); font-style: italic; }
+td.name-left { text-align: left; font-weight: 500; }
+th.name-left { text-align: left; }
+td.hist-me { background: rgba(29, 78, 120, 0.35); color: #5ba8e5; font-weight: 600; }
 
 footer {
   text-align: center;
@@ -197,6 +200,7 @@ footer {
 <div class="page-tabs">
   <button class="page-tab" id="ptab-standings" onclick="showPage('standings')">Standings</button>
   <button class="page-tab" id="ptab-mystats"   onclick="showPage('mystats')">My Stats</button>
+  <button class="page-tab" id="ptab-history"   onclick="showPage('history')">History</button>
 </div>
 <div id="page-standings" class="page-panel">
   <section>
@@ -354,8 +358,15 @@ footer {
 
   </section>
 </div>
+<div id="page-history" class="page-panel">
+  <section>
+    <h2>Season History</h2>
+<p class="empty">No completed seasons yet.</p>
+
+  </section>
+</div>
 </main>
-<footer>Last updated: 04 Mar 2026 13:52</footer>
+<footer>Last updated: 04 Mar 2026 15:12</footer>
 <script>
 function showLeague(l) {
   document.querySelectorAll('.league-panel').forEach(p => p.classList.remove('active'));
