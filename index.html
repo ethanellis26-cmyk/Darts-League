@@ -84,7 +84,7 @@ table {
 thead tr { background: var(--accent); }
 thead th {
   padding: 10px 12px;
-  text-align: left;
+  text-align: center;
   font-weight: 600;
   font-size: 11px;
   text-transform: uppercase;
@@ -92,10 +92,11 @@ thead th {
   color: #c9d8ea;
   white-space: nowrap;
 }
+thead th:nth-child(2) { text-align: left; }
 tbody tr { border-top: 1px solid var(--border); transition: background 0.08s; }
 tbody tr:hover { background: rgba(255,255,255,0.035); }
-td { padding: 9px 12px; white-space: nowrap; }
-td.name { font-weight: 500; white-space: normal; min-width: 120px; }
+td { padding: 9px 12px; white-space: nowrap; text-align: center; }
+td.name { font-weight: 500; white-space: normal; min-width: 120px; text-align: left; }
 td.pts  { font-weight: 700; color: var(--gold); }
 td.diff { color: var(--muted); }
 td.pre-sep, th.pre-sep { padding-right: 20px; }
@@ -327,7 +328,7 @@ footer {
 </section>
 
 </main>
-<footer>Last updated: 04 Mar 2026 09:19</footer>
+<footer>Last updated: 04 Mar 2026 09:22</footer>
 <script>
 function showLeague(l) {
   document.querySelectorAll('.league-panel').forEach(p => p.classList.remove('active'));
