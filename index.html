@@ -53,6 +53,24 @@ h3 {
   letter-spacing: 0.06em;
 }
 
+/* ---- Page switcher ---- */
+.page-tabs { display: flex; gap: 6px; margin-bottom: 28px; }
+.page-tab {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 9px 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.12s, color 0.12s;
+}
+.page-tab:hover { background: var(--border); color: var(--text); }
+.page-tab.active { background: var(--accent); border-color: var(--accent-light); color: #fff; }
+.page-panel { display: none; }
+.page-panel.active { display: block; }
+
 /* ---- Tabs ---- */
 .tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
 .tab-btn {
@@ -73,6 +91,7 @@ h3 {
 
 /* ---- Tables ---- */
 .table-wrap { overflow-x: auto; }
+.match-scroll { overflow-x: auto; overflow-y: auto; max-height: 480px; }
 table {
   width: 100%;
   border-collapse: collapse;
@@ -175,9 +194,14 @@ footer {
   <span class="season">2026-S1</span>
 </header>
 <main>
-<section id="standings">
-  <h2>League Standings</h2>
-  <div class="tabs">
+<div class="page-tabs">
+  <button class="page-tab" id="ptab-standings" onclick="showPage('standings')">Standings</button>
+  <button class="page-tab" id="ptab-mystats"   onclick="showPage('mystats')">My Stats</button>
+</div>
+<div id="page-standings" class="page-panel">
+  <section>
+    <h2>League Standings</h2>
+    <div class="tabs">
 <button class="tab-btn" id="tab-A" onclick="showLeague('A')">League A</button>
 <button class="tab-btn" id="tab-B" onclick="showLeague('B')">League B</button>
 <button class="tab-btn" id="tab-C" onclick="showLeague('C')">League C</button>
@@ -185,7 +209,7 @@ footer {
 <button class="tab-btn" id="tab-E" onclick="showLeague('E')">League E</button>
 </div>
 
-  <div id="league-A" class="league-panel">
+    <div id="league-A" class="league-panel">
 <table>
 <thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th class="pre-sep">L</th><th class="sep">SW</th><th>SL</th><th class="pre-sep diff">SD</th><th class="sep pts-h">Pts</th></tr></thead>
 <tbody>
@@ -321,14 +345,17 @@ footer {
 <div class="legend-row"><span class="legend promo-dot"></span> Promotion zone</div>
 </div>
 
-</section>
-<section id="my-stats">
-<h2>My Season Stats <span class="subtitle">— Ethan Ellis · League E</span></h2>
+  </section>
+</div>
+<div id="page-mystats" class="page-panel">
+  <section>
+    <h2>My Season Stats <span class="subtitle">— Ethan Ellis · League E</span></h2>
 <p class="empty">No matches played yet.</p>
-</section>
 
+  </section>
+</div>
 </main>
-<footer>Last updated: 04 Mar 2026 09:41</footer>
+<footer>Last updated: 04 Mar 2026 13:52</footer>
 <script>
 function showLeague(l) {
   document.querySelectorAll('.league-panel').forEach(p => p.classList.remove('active'));
@@ -338,7 +365,13 @@ function showLeague(l) {
   if (panel) panel.classList.add('active');
   if (btn)   btn.classList.add('active');
 }
-window.onload = function() { showLeague('E'); };
+function showPage(p) {
+  document.querySelectorAll('.page-panel').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('ptab-' + p).classList.add('active');
+}
+window.onload = function() { showLeague('E'); showPage('standings'); };
 </script>
 </body>
 </html>
