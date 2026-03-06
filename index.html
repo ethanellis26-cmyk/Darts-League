@@ -3,217 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDLv3 — 2026-S1</title>
-<style>
-:root {
-  --bg:           #0d1117;
-  --surface:      #161b22;
-  --border:       #30363d;
-  --text:         #e6edf3;
-  --muted:        #8b949e;
-  --accent:       #1f4e79;
-  --accent-light: #2d6da8;
-  --green:        #3fb950;
-  --red:          #f85149;
-  --gold:         #d29922;
-  --me-bg:        #1a3a5c;
-  --me-border:    #2d6da8;
+<title>Darts League — 2026-S1</title>
+<style>:root {
+  --navy: #1F4E79;
+  --navy-dark: #163a5a;
+  --promo: #d4edda;
+  --promo-border: #28a745;
+  --relegate: #f8d7da;
+  --relegate-border: #dc3545;
+  --me: #cce5ff;
+  --me-border: #004085;
+  --pts-bg: #eef4fb;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-}
-header {
-  background: var(--accent);
-  padding: 16px 24px;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  border-bottom: 2px solid var(--accent-light);
-}
-header h1 { font-size: 20px; font-weight: 700; }
-header .season { color: #a8c4e0; font-size: 13px; }
-main { max-width: 980px; margin: 0 auto; padding: 28px 16px; }
-section { margin-bottom: 44px; }
-h2 {
-  font-size: 16px; font-weight: 600;
-  margin-bottom: 16px; padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-h2 .subtitle { font-weight: 400; color: var(--muted); font-size: 13px; }
-h3 {
-  font-size: 12px; font-weight: 600;
-  margin: 20px 0 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-/* ---- Page switcher ---- */
-.page-tabs { display: flex; gap: 6px; margin-bottom: 28px; }
-.page-tab {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 9px 26px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.12s, color 0.12s;
-}
-.page-tab:hover { background: var(--border); color: var(--text); }
-.page-tab.active { background: var(--accent); border-color: var(--accent-light); color: #fff; }
-.page-panel { display: none; }
+body { font-family: Segoe UI, Arial, sans-serif; background: #f0f4f8; color: #222; font-size: 14px; }
+header { background: var(--navy); color: #fff; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
+header .season-label { font-size: 0.9rem; opacity: 0.8; }
+nav.page-nav { background: var(--navy-dark); display: flex; }
+nav.page-nav button { background: none; border: none; color: #aac4e0; padding: 10px 20px; cursor: pointer; font-size: 0.92rem; font-weight: 600; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s; }
+nav.page-nav button:hover { color: #fff; }
+nav.page-nav button.active { color: #fff; border-bottom-color: #5eaeff; }
+.page-panel { display: none; padding: 20px; }
 .page-panel.active { display: block; }
-
-/* ---- Tabs ---- */
-.tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
-.tab-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 6px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: background 0.12s, color 0.12s;
-}
-.tab-btn:hover { background: var(--border); color: var(--text); }
-.tab-btn.active { background: var(--accent); border-color: var(--accent-light); color: #fff; }
+nav.league-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+nav.league-nav button { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 5px 14px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #555; transition: all 0.15s; }
+nav.league-nav button:hover { background: #e8f0fe; border-color: var(--navy); color: var(--navy); }
+nav.league-nav button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 .league-panel { display: none; }
 .league-panel.active { display: block; }
-
-/* ---- Tables ---- */
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+thead tr { background: var(--navy); color: #fff; }
+thead th { padding: 8px 10px; text-align: center; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+thead th.name, thead th.name-left { text-align: left; }
+tbody tr { border-bottom: 1px solid #e8edf3; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f5f8ff; }
+tbody td { padding: 7px 10px; text-align: center; }
+td.name, td.name-left { text-align: left; }
+th.sep, td.sep { border-left: 2px solid #c0d0e8; }
+th.pre-sep, td.pre-sep { border-right: 1px solid #dde5f0; }
+td.diff { font-weight: 600; }
+td.pts { font-weight: 700; background: var(--pts-bg); }
+th.pts-h { background: #163a5a; }
+tr.promotion td { background: var(--promo); }
+tr.promotion td.pts { background: #b8dfc4; }
+tr.relegation td { background: var(--relegate); }
+tr.relegation td.pts { background: #f0b8be; }
+tr.me td { background: var(--me) !important; color: #003366 !important; font-weight: 600; }
+tr.me td.pts { background: #99caff !important; }
+.badge { display: inline-block; background: var(--navy); color: #fff; font-size: 0.68rem; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; letter-spacing: 0.5px; }
+.legend-row { margin-top: 8px; font-size: 0.8rem; color: #555; }
+.legend { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: middle; margin-right: 3px; }
+.promo-dot { background: var(--promo-border); }
+.rel-dot { background: var(--relegate-border); }
+.summary-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 8px; padding: 14px 18px; min-width: 110px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.card-val { font-size: 1.5rem; font-weight: 700; color: var(--navy); }
+.card-label { font-size: 0.75rem; color: #666; margin-top: 4px; }
+h2 { font-size: 1.15rem; color: var(--navy); margin-bottom: 14px; }
+h3 { font-size: 1rem; color: #333; margin: 18px 0 10px; }
+.subtitle { font-weight: 400; font-size: 0.9rem; color: #555; }
+.match-scroll { max-height: 480px; overflow-y: auto; border-radius: 6px; }
+td.result { font-weight: 700; }
+td.win { color: #1a7a1a; }
+td.loss { color: #b00020; }
+.empty { color: #888; font-style: italic; padding: 12px 0; }
 .table-wrap { overflow-x: auto; }
-.match-scroll { overflow-x: auto; overflow-y: auto; max-height: 480px; }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-thead tr { background: var(--accent); }
-thead th {
-  padding: 10px 12px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c9d8ea;
-  white-space: nowrap;
-}
-thead th:nth-child(2) { text-align: left; }
-tbody tr { border-top: 1px solid var(--border); transition: background 0.08s; }
-tbody tr:hover { background: rgba(255,255,255,0.035); }
-td { padding: 9px 12px; white-space: nowrap; text-align: center; }
-td.name { font-weight: 500; white-space: normal; min-width: 120px; text-align: left; }
-td.pts  { font-weight: 700; color: var(--gold); }
-td.diff { color: var(--muted); }
-td.pre-sep, th.pre-sep { padding-right: 20px; }
-td.sep, th.sep { border-left: 1px solid var(--border); padding-left: 20px; }
-th.pts-h { font-weight: 800; color: #fff; }
-
-/* ---- Promotion / Relegation ---- */
-tr.promotion { background: rgba(63, 185, 80, 0.08); border-left: 3px solid #3fb950; }
-tr.promotion:hover { background: rgba(63, 185, 80, 0.14); }
-tr.relegation { background: rgba(248, 81, 73, 0.08); border-left: 3px solid #f85149; }
-tr.relegation:hover { background: rgba(248, 81, 73, 0.14); }
-
-/* ---- Ethan's row (always takes precedence) ---- */
-tr.me { background: var(--me-bg); border-left: 3px solid var(--me-border); }
-tr.me:hover { background: #1e3f63; }
-tr.me td.pts { color: #5ba8e5; }
-
-/* ---- Legend ---- */
-.legend-row { font-size: 11px; color: var(--muted); margin-top: 8px; }
-.legend { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin-right: 3px; }
-.promo-dot { background: #3fb950; }
-.rel-dot   { background: #f85149; }
-.badge {
-  display: inline-block;
-  background: var(--accent-light);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 3px;
-  vertical-align: middle;
-  letter-spacing: 0.05em;
-  margin-left: 4px;
-}
-
-/* ---- Summary cards ---- */
-.summary-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 18px;
-  min-width: 90px;
-  text-align: center;
-}
-.card-val   { font-size: 22px; font-weight: 700; }
-.card-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-
-/* ---- Match result colours ---- */
-td.result { font-weight: 700; text-align: center; }
-td.result.win  { color: var(--green); }
-td.result.loss { color: var(--red); }
-
-.empty { color: var(--muted); font-style: italic; }
-td.name-left { text-align: left; font-weight: 500; }
-th.name-left { text-align: left; }
-td.hist-me { background: rgba(29, 78, 120, 0.35); color: #5ba8e5; font-weight: 600; }
-
-footer {
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  padding: 24px;
-  border-top: 1px solid var(--border);
-}
-
+td.hist-me { background: var(--me); color: #003366; font-weight: 600; }
 @media (max-width: 600px) {
-  table { font-size: 12px; }
-  td, th { padding: 7px 8px; }
   .summary-cards { gap: 8px; }
-  .card { min-width: 75px; padding: 10px 12px; }
-  .card-val { font-size: 18px; }
-}
-</style>
+  .card { min-width: 80px; padding: 10px 10px; }
+  .card-val { font-size: 1.2rem; }
+  header h1 { font-size: 1rem; }
+}</style>
 </head>
 <body>
 <header>
   <h1>Darts</h1>
-  <span class="season">2026-S1</span>
+  <span class="season-label">2026-S1</span>
 </header>
-<main>
-<div class="page-tabs">
-  <button class="page-tab" id="ptab-standings" onclick="showPage('standings')">Standings</button>
-  <button class="page-tab" id="ptab-mystats"   onclick="showPage('mystats')">My Stats</button>
-  <button class="page-tab" id="ptab-history"   onclick="showPage('history')">History</button>
-</div>
+<nav class="page-nav">
+  <button id="pbtn-standings" onclick="showPage('standings')">Standings</button>
+  <button id="pbtn-mystats" onclick="showPage('mystats')">My Stats</button>
+  <button id="pbtn-history" onclick="showPage('history')">History</button>
+</nav>
 <div id="page-standings" class="page-panel">
-  <section>
-    <h2>League Standings</h2>
-    <div class="tabs">
-<button class="tab-btn" id="tab-A" onclick="showLeague('A')">League A</button>
-<button class="tab-btn" id="tab-B" onclick="showLeague('B')">League B</button>
-<button class="tab-btn" id="tab-C" onclick="showLeague('C')">League C</button>
-<button class="tab-btn" id="tab-D" onclick="showLeague('D')">League D</button>
-<button class="tab-btn" id="tab-E" onclick="showLeague('E')">League E</button>
-</div>
-
-    <div id="league-A" class="league-panel">
+  <nav class="league-nav">
+    <button id="lbtn-A" onclick="showLeague('A')">League A</button>
+    <button id="lbtn-B" onclick="showLeague('B')">League B</button>
+    <button id="lbtn-C" onclick="showLeague('C')">League C</button>
+    <button id="lbtn-D" onclick="showLeague('D')">League D</button>
+    <button id="lbtn-E" onclick="showLeague('E')">League E</button>
+  </nav>
+  <div id="league-A" class="league-panel">
 <table>
 <thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th class="pre-sep">L</th><th class="sep">SW</th><th>SL</th><th class="pre-sep diff">SD</th><th class="sep pts-h">Pts</th></tr></thead>
 <tbody>
@@ -265,7 +148,7 @@ footer {
 <tr class="relegation"><td>19</td><td class="name">Colin Frost</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 <tr class="relegation"><td>20</td><td class="name">Ivan Cole</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 </tbody></table>
-<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
+<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;Â·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
 </div>
 <div id="league-C" class="league-panel">
 <table>
@@ -292,7 +175,7 @@ footer {
 <tr class="relegation"><td>19</td><td class="name">John Hargreaves</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 <tr class="relegation"><td>20</td><td class="name">Stuart Millward</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 </tbody></table>
-<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
+<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;Â·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
 </div>
 <div id="league-D" class="league-panel">
 <table>
@@ -319,7 +202,7 @@ footer {
 <tr class="relegation"><td>19</td><td class="name">Andy Marsh</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 <tr class="relegation"><td>20</td><td class="name">Lee Sutton</td><td>2</td><td>0</td><td class="pre-sep">2</td><td class="sep">0</td><td>4</td><td class="diff pre-sep">-4</td><td class="sep pts">0</td></tr>
 </tbody></table>
-<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
+<div class="legend-row"><span class="legend promo-dot"></span> Promotion zone&nbsp;&nbsp;Â·&nbsp;&nbsp;<span class="legend rel-dot"></span> Relegation zone</div>
 </div>
 <div id="league-E" class="league-panel">
 <table>
@@ -349,40 +232,34 @@ footer {
 <div class="legend-row"><span class="legend promo-dot"></span> Promotion zone</div>
 </div>
 
-  </section>
 </div>
 <div id="page-mystats" class="page-panel">
-  <section>
-    <h2>My Season Stats <span class="subtitle">— Ethan Ellis · League E</span></h2>
+  <h2>My Season Stats <span class="subtitle">â€” Ethan Ellis Â· League E</span></h2>
 <p class="empty">No matches played yet.</p>
 
-  </section>
 </div>
 <div id="page-history" class="page-panel">
-  <section>
-    <h2>Season History</h2>
-<p class="empty">No completed seasons yet.</p>
-
-  </section>
+  <h2>Season History</h2><p class="empty">No completed seasons yet.</p>
 </div>
-</main>
-<footer>Last updated: 04 Mar 2026 15:14</footer>
-<script>
-function showLeague(l) {
-  document.querySelectorAll('.league-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+<script>function showLeague(l) {
+  document.querySelectorAll('.league-panel').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.league-nav button').forEach(function(el) { el.classList.remove('active'); });
   var panel = document.getElementById('league-' + l);
-  var btn   = document.getElementById('tab-' + l);
   if (panel) panel.classList.add('active');
-  if (btn)   btn.classList.add('active');
+  var btn = document.getElementById('lbtn-' + l);
+  if (btn) btn.classList.add('active');
 }
 function showPage(p) {
-  document.querySelectorAll('.page-panel').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p).classList.add('active');
-  document.getElementById('ptab-' + p).classList.add('active');
+  document.querySelectorAll('.page-panel').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.page-nav button').forEach(function(el) { el.classList.remove('active'); });
+  var panel = document.getElementById('page-' + p);
+  if (panel) panel.classList.add('active');
+  var btn = document.getElementById('pbtn-' + p);
+  if (btn) btn.classList.add('active');
 }
-window.onload = function() { showLeague('E'); showPage('standings'); };
-</script>
+window.onload = function() {
+  showPage('standings');
+  showLeague('E');
+};</script>
 </body>
 </html>
