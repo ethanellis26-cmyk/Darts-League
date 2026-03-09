@@ -69,6 +69,7 @@ h3 { font-size: 1rem; color: #333; margin: 18px 0 10px; }
 td.result { font-weight: 700; }
 td.win { color: #1a7a1a; }
 td.loss { color: #b00020; }
+td.pending { color: #999; }
 .empty { color: #888; font-style: italic; padding: 12px 0; }
 .table-wrap { overflow-x: auto; }
 td.hist-me { background: var(--me); color: #003366; font-weight: 600; }
@@ -110,6 +111,7 @@ td.hist-me { background: var(--me); color: #003366; font-weight: 600; }
   <button id="pbtn-standings" onclick="showPage('standings')">Standings</button>
   <button id="pbtn-lc" onclick="showPage('lc')">League Cup</button>
   <button id="pbtn-oc" onclick="showPage('oc')">Open Cup</button>
+  <button id="pbtn-schedule" onclick="showPage('schedule')">Schedule</button>
   <button id="pbtn-mystats" onclick="showPage('mystats')">My Stats</button>
   <button id="pbtn-history" onclick="showPage('history')">History</button>
 </nav>
@@ -500,6 +502,55 @@ td.hist-me { background: var(--me); color: #003366; font-weight: 600; }
 <div class="bracket-legend">
   <span><span class="swatch" style="background:#d4edda;border-color:#28a745;"></span> Winner</span>
   <span><span class="swatch" style="background:#f0f2f5;border-color:#ccc;"></span> TBD</span>
+</div>
+
+</div>
+<div id="page-schedule" class="page-panel">
+  <h2>My Schedule <span class="subtitle">— Ethan Ellis · League E</span></h2>
+<div class="standings-wrap" style="max-width:560px;">
+<div class="match-scroll"><table>
+<thead><tr><th>Rnd</th><th>Competition</th><th class="name-left">Opponent</th><th>H/A</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>League</td><td class="name-left">Cross Patriaco</td><td>H</td><td class="result loss">Loss</td></tr>
+<tr><td>2</td><td>League</td><td class="name-left">Phillip Han</td><td>H</td><td class="result loss">Loss</td></tr>
+<tr><td>3</td><td>League</td><td class="name-left">Alex Gehl</td><td>H</td><td class="result win">Win</td></tr>
+<tr><td>4</td><td>League</td><td class="name-left">Freddy Kwak</td><td>H</td><td class="result win">Win</td></tr>
+<tr><td>5</td><td>League</td><td class="name-left">Max White</td><td>H</td><td class="result win">Win</td></tr>
+<tr><td>6</td><td>League</td><td class="name-left">Mathew Cuschieri</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>6</td><td>League Cup</td><td class="name-left">Phillip Han</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>7</td><td>League</td><td class="name-left">Eduardo Puerta</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>8</td><td>League</td><td class="name-left">Hans Nsengimana</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>9</td><td>League</td><td class="name-left">Ally Powers</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>10</td><td>League</td><td class="name-left">Alexander Ketterson</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>11</td><td>League</td><td class="name-left">Aaron Maymin</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>12</td><td>League</td><td class="name-left">Liam Neary</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>13</td><td>League</td><td class="name-left">Sebastian Warburton</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>14</td><td>League</td><td class="name-left">Martin Trouiloud</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>15</td><td>League</td><td class="name-left">Jake Thomas</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>16</td><td>League</td><td class="name-left">Seth Kricheff</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>17</td><td>League</td><td class="name-left">Edward Towers</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>18</td><td>League</td><td class="name-left">Brenden Bready</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>19</td><td>League</td><td class="name-left">Xavier Cherniak</td><td>H</td><td class="result pending">—</td></tr>
+<tr><td>20</td><td>League</td><td class="name-left">Cross Patriaco</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>21</td><td>League</td><td class="name-left">Phillip Han</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>22</td><td>League</td><td class="name-left">Alex Gehl</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>23</td><td>League</td><td class="name-left">Freddy Kwak</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>24</td><td>League</td><td class="name-left">Max White</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>25</td><td>League</td><td class="name-left">Mathew Cuschieri</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>26</td><td>League</td><td class="name-left">Eduardo Puerta</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>27</td><td>League</td><td class="name-left">Hans Nsengimana</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>28</td><td>League</td><td class="name-left">Ally Powers</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>29</td><td>League</td><td class="name-left">Alexander Ketterson</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>30</td><td>League</td><td class="name-left">Aaron Maymin</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>31</td><td>League</td><td class="name-left">Liam Neary</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>32</td><td>League</td><td class="name-left">Sebastian Warburton</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>33</td><td>League</td><td class="name-left">Martin Trouiloud</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>34</td><td>League</td><td class="name-left">Jake Thomas</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>35</td><td>League</td><td class="name-left">Seth Kricheff</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>36</td><td>League</td><td class="name-left">Edward Towers</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>37</td><td>League</td><td class="name-left">Brenden Bready</td><td>A</td><td class="result pending">—</td></tr>
+<tr><td>38</td><td>League</td><td class="name-left">Xavier Cherniak</td><td>A</td><td class="result pending">—</td></tr>
+</tbody></table></div>
 </div>
 
 </div>
